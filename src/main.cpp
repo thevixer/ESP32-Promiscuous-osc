@@ -40,6 +40,7 @@ void setup() {
 void loop() {
 
   getGsrData();
+  //git test
   
 
 }//--- loop()
