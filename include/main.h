@@ -5,5 +5,6 @@
 #include <ArduinoOSC.h>
 #include <MAX30105.h>
 #include "gsr.h"
+#include "message.h"
 
 #endif

@@ -10,8 +10,12 @@ const IPAddress subnet(255,255,255,0);
 //---------------------------- OSC --------------------------------------
 OscWiFi osc;
 String host;
-const uint32_t recv_port = 10000;
-const uint32_t send_port = 12000;
+const uint16_t recv_port = 10000;
+const uint16_t send_port = 12000;
+
+//---------------------------- MSG --------------------------------------
+Message sensorData[];
+
 
 void setup() {
   Serial.begin(115200);
@@ -39,6 +43,7 @@ void setup() {
 
 void loop() {
 
+  osc.parse();
   getGsrData();
   //git test
   
