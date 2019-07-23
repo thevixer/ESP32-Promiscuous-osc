@@ -14,7 +14,7 @@ const uint16_t recv_port = 10000;
 const uint16_t send_port = 12000;
 
 //---------------------------- MSG --------------------------------------
-const int amount_of_sensor = 2;
+const int amount_of_sensor = 1;
 Message sensorMsg[amount_of_sensor];
 
 //---------------------------- SENSORS --------------------------------------
@@ -24,7 +24,7 @@ String gsr_sensor = "GSR";
 
 //---------------------------- COUNTER --------------------------------------
 
-const int period = 2000;
+const int period = 5000;
 unsigned long time_now = 0;
 
 void setup() {
@@ -52,28 +52,36 @@ void setup() {
 }//--- setup()
 
 void sensorToMsg(String name, uint16_t value_1, uint16_t value_2 = 0, uint16_t value_3 = 0){
-  for(uint8_t i = 0; i <= amount_of_sensor; i++){
-    if(value_3>0)
+  for(uint8_t i = 0; i < amount_of_sensor; i++){
+    if(value_1 != 0 && value_3 != 0 && value_2 != 0)
     {
           Message sensor = {i, name, value_1, value_2, value_3};
           sensorMsg[i] = sensor;
+          Serial.print("3 args ->");
     }
-    else if (value_2>0)
+    else if (value_1 != 0 && value_2 != 0)
     {
           Message sensor = {i, name, value_1, value_2};
           sensorMsg[i] = sensor;
+          Serial.print("2 args ->");
     }
-    else
+    else if (value_1 != 0)
     {
         Message sensor = {i, name, value_1};
         sensorMsg[i] = sensor;
+        Serial.print("1 arg ->");
     }
+    else
+    {
+      Serial.print("No valid sensor data.");
+    }
+    
     
 
   }
 }
 void sensorPrint(){
-  for(Message sensor : sensorMsg){
+  for(Message &sensor : sensorMsg){
     sensor.print();
   }
 }
