@@ -8,7 +8,7 @@ class Message
 {
     public:
         uint8_t id;
-        char name;
+        String name;
         uint16_t value_1;
         uint16_t value_2;
         uint16_t value_3;
@@ -16,20 +16,20 @@ class Message
 
         Message();
 
-        Message(uint8_t id, char name, uint16_t value_1){
+        Message(uint8_t id, String name, uint16_t value_1){
             this->id = id;
             this->value_1 = value_1;
             this->name = name;
         };
 
-        Message(uint8_t id, char name, uint16_t value_1, uint16_t value_2){
+        Message(uint8_t id, String name, uint16_t value_1, uint16_t value_2){
             this->id = id;
             this->value_1 = value_1;
             this->value_2 = value_2;
             this->name = name;
         };
 
-        Message(uint8_t id, char name, uint16_t value_1, uint16_t value_2, uint16_t value_3){
+        Message(uint8_t id, String name, uint16_t value_1, uint16_t value_2, uint16_t value_3){
             this->id = id;
             this->value_1 = value_1;
             this->value_2 = value_2;

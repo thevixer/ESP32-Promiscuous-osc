@@ -20,6 +20,12 @@ Message sensorMsg[amount_of_sensor];
 //---------------------------- SENSORS --------------------------------------
 
 uint16_t GSR;
+String gsr_sensor = "GSR";
+
+//---------------------------- COUNTER --------------------------------------
+
+const int period = 2000;
+unsigned long time_now = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -45,17 +51,43 @@ void setup() {
 
 }//--- setup()
 
-void sensorToMsg(char name, uint16_t value){
+void sensorToMsg(String name, uint16_t value_1, uint16_t value_2 = 0, uint16_t value_3 = 0){
   for(uint8_t i = 0; i <= amount_of_sensor; i++){
-    Message sensor = {i, name, value};
-    sensorMsg[i] = sensor;
+    if(value_3>0)
+    {
+          Message sensor = {i, name, value_1, value_2, value_3};
+          sensorMsg[i] = sensor;
+    }
+    else if (value_2>0)
+    {
+          Message sensor = {i, name, value_1, value_2};
+          sensorMsg[i] = sensor;
+    }
+    else
+    {
+        Message sensor = {i, name, value_1};
+        sensorMsg[i] = sensor;
+    }
+    
+
+  }
+}
+void sensorPrint(){
+  for(Message sensor : sensorMsg){
+    sensor.print();
   }
 }
 
 void loop() {
-
+  time_now = millis();
   osc.parse();
-  GSR = getGsrData();
+
+  if(time_now % period == 0){
+    GSR = getGsrData();
+    sensorToMsg(gsr_sensor, GSR);
+    sensorPrint();
+  }
+
   //git test
   
 
