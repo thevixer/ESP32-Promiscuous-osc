@@ -6,14 +6,39 @@ const String unk = "unknown";
 
 class Message
 {
-        const char _name = unk.c_str;
-        const uint16_t _value = 0;
-
-
     public:
+        uint8_t id;
+        char name;
+        uint16_t value_1;
+        uint16_t value_2;
+        uint16_t value_3;
+     
+
         Message();
-        Message(const char & name, const uint16_t & value);
-        ~Message();
+
+        Message(uint8_t id, char name, uint16_t value_1){
+            this->id = id;
+            this->value_1 = value_1;
+            this->name = name;
+        };
+
+        Message(uint8_t id, char name, uint16_t value_1, uint16_t value_2){
+            this->id = id;
+            this->value_1 = value_1;
+            this->value_2 = value_2;
+            this->name = name;
+        };
+
+        Message(uint8_t id, char name, uint16_t value_1, uint16_t value_2, uint16_t value_3){
+            this->id = id;
+            this->value_1 = value_1;
+            this->value_2 = value_2;
+            this->value_3 = value_3;
+            this->name = name;
+        };
+
+        ~Message(){};
+
         void print() const;
         
 

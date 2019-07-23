@@ -14,8 +14,12 @@ const uint16_t recv_port = 10000;
 const uint16_t send_port = 12000;
 
 //---------------------------- MSG --------------------------------------
-Message sensorData[];
+const int amount_of_sensor = 2;
+Message sensorMsg[amount_of_sensor];
 
+//---------------------------- SENSORS --------------------------------------
+
+uint16_t GSR;
 
 void setup() {
   Serial.begin(115200);
@@ -41,10 +45,17 @@ void setup() {
 
 }//--- setup()
 
+void sensorToMsg(char name, uint16_t value){
+  for(uint8_t i = 0; i <= amount_of_sensor; i++){
+    Message sensor = {i, name, value};
+    sensorMsg[i] = sensor;
+  }
+}
+
 void loop() {
 
   osc.parse();
-  getGsrData();
+  GSR = getGsrData();
   //git test
   
 

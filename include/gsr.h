@@ -3,6 +3,6 @@
 #include <Arduino.h>
 
 
-void getGsrData();
+uint16_t getGsrData();
 
 #endif
