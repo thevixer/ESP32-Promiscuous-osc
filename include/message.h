@@ -42,7 +42,7 @@ class Message
 
         ~Message(){};
 
-        void print() const;
+        void print(uint8_t id) const;
         
 
 };

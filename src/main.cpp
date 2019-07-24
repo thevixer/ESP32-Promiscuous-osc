@@ -57,19 +57,19 @@ void sensorToMsg(String name, uint16_t value_1, uint16_t value_2 = 0, uint16_t v
     {
           Message sensor = {i, name, value_1, value_2, value_3};
           sensorMsg[i] = sensor;
-          Serial.print("3 args -> ");sensorMsg[i].print();
+          Serial.print("3 args -> ");sensorMsg[i].print(2);
     }
     if (value_1 != 0 && value_2 != 0)
     {
           Message sensor = {i, name, value_1, value_2};
           sensorMsg[i] = sensor;
-          Serial.print("2 args -> ");sensorMsg[i].print();
+          Serial.print("2 args -> ");sensorMsg[i].print(1);
     }
     if (value_1 != 0)
     {
         Message sensor = {i, name, value_1};
         sensorMsg[i] = sensor;
-        Serial.printf("%i -> ", i);sensorMsg[i].print();
+        Serial.printf("%i -> ", i);sensorMsg[i].print(0);
     }
     else
     {
