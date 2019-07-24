@@ -24,7 +24,7 @@ const String gsr_sensor = "GSR";
 
 //---------------------------- COUNTER --------------------------------------
 
-const int period = 100;
+const int period = 1000;
 unsigned long time_now = 0;
 
 void setup() {
@@ -87,7 +87,7 @@ void loop() {
 
   if(time_now % period == 0){
     times_run++;
-    Serial.printf("There have %1.fs passed since start, executed %i times\n", time_now*0.001, times_run);
+    Serial.printf("There have %2.fs passed since start, executed %i times\n", time_now*0.001, times_run);
     Serial.println("------------------------------------------------------------");
     Serial.print("Msg[] size: "); Serial.printf("%i", sizeof(sensorMsg)); Serial.print(" | ");
     sensorToMsg(gsr_sensor, getGsrData());
