@@ -1,8 +1,8 @@
-#ifndef _MESSAGE_
-#define _MESSAGE_
+#ifndef _Sensor_
+#define _Sensor_
 #include <Arduino.h>
 
-class Message
+class Sensor
 {
         uint8_t id;
         const char * name;
@@ -14,16 +14,16 @@ class Message
 
      
 
-        Message();
+        Sensor();
 
-        Message(uint8_t id, String name, uint16_t value_1){
+        Sensor(uint8_t id, String name, uint16_t value_1){
             this->id = id;
             this->name = name.c_str();
             this->value_1 = value_1;
            
         };
 
-        Message(uint8_t id, String name, uint16_t value_1, uint16_t value_2){
+        Sensor(uint8_t id, String name, uint16_t value_1, uint16_t value_2){
             this->id = id;
             this->name = name.c_str();
             this->value_1 = value_1;
@@ -31,7 +31,7 @@ class Message
             
         };
 
-        Message(uint8_t id, String name, uint16_t value_1, uint16_t value_2, uint16_t value_3){
+        Sensor(uint8_t id, String name, uint16_t value_1, uint16_t value_2, uint16_t value_3){
             this->id = id;
             this->name = name.c_str();
             this->value_1 = value_1;
@@ -40,7 +40,7 @@ class Message
            
         };
 
-        ~Message(){};
+        ~Sensor(){};
 
         void print(uint8_t id) const;
         

@@ -1,10 +1,10 @@
-#include "message.h"
+#include "sensor.h"
 
-Message::Message(){
+Sensor::Sensor(){
     Serial.println("Default");
 }
 
-void Message::print(uint8_t id) const{
+void Sensor::print(uint8_t id) const{
     switch (id)
     {
     case 2:

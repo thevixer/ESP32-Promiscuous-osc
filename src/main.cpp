@@ -14,8 +14,8 @@ const uint16_t recv_port = 10000;
 const uint16_t send_port = 12000;
 
 //---------------------------- MSG --------------------------------------
-const int amount_of_sensor = 1;
-Message sensorMsg[amount_of_sensor];
+const int amount_of_sensors = 1;
+Sensor sensor_container[amount_of_sensors];
 int times_run = 0;
 
 //---------------------------- SENSORS --------------------------------------
@@ -31,10 +31,11 @@ void setup() {
   Serial.begin(115200);
 
   WiFi.begin(ssid, pwd);
-  while(WiFi.status() != WL_CONNECTED){
-    Serial.print(".");delay(500);
-  }
+delay(500);
 
+  while(WiFi.status() != WL_CONNECTED){
+    Serial.print(".");
+      }
   gateway = WiFi.gatewayIP(); // Onze gateway IP = onze host IP. Dit omdat de smartphone in AP mode staat en zijn eigen IP = gatewayIP.
   host = String(gateway);
   WiFi.config(ip, gateway, subnet);
@@ -51,25 +52,25 @@ void setup() {
 
 }//--- setup()
 
-void sensorToMsg(String name, uint16_t value_1, uint16_t value_2 = 0, uint16_t value_3 = 0){
-  for(uint8_t i = 0; i < amount_of_sensor; i++){
+void sensor_to_container(String name, uint16_t value_1, uint16_t value_2 = 0, uint16_t value_3 = 0){
+  for(uint8_t i = 0; i < amount_of_sensors; i++){
     if(value_1 != 0 && value_3 != 0 && value_2 != 0)
     {
-          Message sensor = {i, name, value_1, value_2, value_3};
-          sensorMsg[i] = sensor;
-          Serial.print("3 args -> ");sensorMsg[i].print(2);
+          Sensor sensor = {i, name, value_1, value_2, value_3};
+          sensor_container[i] = sensor;
+          Serial.print("3 args -> ");sensor_container[i].print(2);
     }
     if (value_1 != 0 && value_2 != 0)
     {
-          Message sensor = {i, name, value_1, value_2};
-          sensorMsg[i] = sensor;
-          Serial.print("2 args -> ");sensorMsg[i].print(1);
+          Sensor sensor = {i, name, value_1, value_2};
+          sensor_container[i] = sensor;
+          Serial.print("2 args -> ");sensor_container[i].print(1);
     }
     if (value_1 != 0)
     {
-        Message sensor = {i, name, value_1};
-        sensorMsg[i] = sensor;
-        Serial.printf("%i -> ", i);sensorMsg[i].print(0);
+        Sensor sensor = {i, name, value_1};
+        sensor_container[i] = sensor;
+        Serial.printf("%i -> ", i);sensor_container[i].print(0);
     }
     else
     {
@@ -89,8 +90,8 @@ void loop() {
     times_run++;
     Serial.printf("There have %2.fs passed since start, executed %i times\n", time_now*0.001, times_run);
     Serial.println("------------------------------------------------------------");
-    Serial.print("Msg[] size: "); Serial.printf("%i", sizeof(sensorMsg)); Serial.print(" | ");
-    sensorToMsg(gsr_sensor, getGsrData());
+    Serial.print("Msg[] size: "); Serial.printf("%i", sizeof(sensor_container)); Serial.print(" | ");
+    sensor_to_container(gsr_sensor, getGsrData());
   }
 
   //git test
