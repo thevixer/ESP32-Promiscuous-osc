@@ -16,15 +16,15 @@ const uint16_t send_port = 12000;
 //---------------------------- MSG --------------------------------------
 const int amount_of_sensor = 1;
 Message sensorMsg[amount_of_sensor];
+int times_run = 0;
 
 //---------------------------- SENSORS --------------------------------------
 
-uint16_t GSR;
-String gsr_sensor = "GSR";
+const String gsr_sensor = "GSR";
 
 //---------------------------- COUNTER --------------------------------------
 
-const int period = 5000;
+const int period = 100;
 unsigned long time_now = 0;
 
 void setup() {
@@ -57,19 +57,19 @@ void sensorToMsg(String name, uint16_t value_1, uint16_t value_2 = 0, uint16_t v
     {
           Message sensor = {i, name, value_1, value_2, value_3};
           sensorMsg[i] = sensor;
-          Serial.print("3 args ->");
+          Serial.print("3 args -> ");sensorMsg[i].print();
     }
-    else if (value_1 != 0 && value_2 != 0)
+    if (value_1 != 0 && value_2 != 0)
     {
           Message sensor = {i, name, value_1, value_2};
           sensorMsg[i] = sensor;
-          Serial.print("2 args ->");
+          Serial.print("2 args -> ");sensorMsg[i].print();
     }
-    else if (value_1 != 0)
+    if (value_1 != 0)
     {
         Message sensor = {i, name, value_1};
         sensorMsg[i] = sensor;
-        Serial.print("1 arg ->");
+        Serial.printf("%i -> ", i);sensorMsg[i].print();
     }
     else
     {
@@ -80,20 +80,17 @@ void sensorToMsg(String name, uint16_t value_1, uint16_t value_2 = 0, uint16_t v
 
   }
 }
-void sensorPrint(){
-  for(Message &sensor : sensorMsg){
-    sensor.print();
-  }
-}
 
 void loop() {
   time_now = millis();
   osc.parse();
 
   if(time_now % period == 0){
-    GSR = getGsrData();
-    sensorToMsg(gsr_sensor, GSR);
-    sensorPrint();
+    times_run++;
+    Serial.printf("There have %1.fs passed since start, executed %i times\n", time_now*0.001, times_run);
+    Serial.println("------------------------------------------------------------");
+    Serial.print("Msg[] size: "); Serial.printf("%i", sizeof(sensorMsg)); Serial.print(" | ");
+    sensorToMsg(gsr_sensor, getGsrData());
   }
 
   //git test

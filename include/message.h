@@ -4,12 +4,14 @@
 
 class Message
 {
-    public:
         uint8_t id;
         const char * name;
         uint16_t value_1;
         uint16_t value_2;
         uint16_t value_3;
+        
+    public:
+
      
 
         Message();

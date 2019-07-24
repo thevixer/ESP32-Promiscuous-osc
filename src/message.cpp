@@ -23,8 +23,7 @@ void Message::print() const{
     // {
     //     Serial.printf("Msg: ID= %d, NAME= %s, VALUE_1 = %d, VALUE_2 = %d \n", id, name, value_1, value_2);
     // }
-   
-
         Serial.printf("Msg: ID= %d, NAME= %s, VALUE_1 = %d \n", id, name, value_1);
+        Serial.println(" ");
   
 }
