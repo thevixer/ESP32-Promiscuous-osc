@@ -1,10 +1,12 @@
 #include "sensor.h"
 
-Sensor::Sensor(){
+Sensor::Sensor()
+{
     Serial.println("Default");
 }
 
-void Sensor::print(uint8_t id) const{
+void Sensor::print(uint8_t id) const
+{
     switch (id)
     {
     case 2:
@@ -22,5 +24,5 @@ void Sensor::print(uint8_t id) const{
     default:
         Serial.println("No valid Msg and arguments!");
         break;
-    } 
+    }
 }
