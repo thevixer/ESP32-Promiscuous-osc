@@ -1,3 +1,8 @@
+/*
+MIT License 
+https://github.com/hideakitai/ArduinoOSC
+Copyright (c) 2017 Hideaki Tai 
+*/
 #include "main.h"
 
 //---------------------------- WIFI --------------------------------------
@@ -20,6 +25,14 @@ unsigned long time_now = 0;
 
 //---------------------------- SENSORS --------------------------------------
 const String gsr_sensor = "GSR";
+const String heartRateSensor = "MAX30105";
+const String wifiInfo = "WiFi";
+
+void serial_print_stuff()
+{
+  Serial.printf("There have %2.fs passed since start, executed %i times\n", time_now * 0.001, times_run);
+  Serial.println("------------------------------------------------------------");
+}
 
 void setup()
 {
@@ -30,7 +43,7 @@ void setup()
 
   while (WiFi.status() != WL_CONNECTED)
   {
-    Serial.print(".");
+    Serial.print(".");delay(500);
   }
   gateway = WiFi.gatewayIP(); // Onze gateway IP = onze host IP. Dit omdat de smartphone in AP mode staat en zijn eigen IP = gatewayIP.
   host = String(gateway);
@@ -40,6 +53,9 @@ void setup()
   Serial.println(WiFi.localIP());
   Serial.print("WiFi connected, GATEWAY = ");
   Serial.println(gateway);
+
+  //---------- MAX30105 INIT --------------
+  initMax();
 
   osc.begin(recv_port);
   String osc_send_succes = "Succes";
@@ -56,11 +72,9 @@ void loop()
   if (time_now % period == 0)
   {
     times_run++;
-    Serial.printf("There have %2.fs passed since start, executed %i times\n", time_now * 0.001, times_run);
-    Serial.println("------------------------------------------------------------");
-    Serial.print("Msg[] size: ");
-    Serial.print(" | ");
-    //sensor_to_container(gsr_sensor, getGsrData());
+    serial_print_stuff();
     sensor_to_container(0, gsr_sensor, getGsrData());
+    sensor_to_container(1, heartRateSensor, getIrSensorValue(), getBpm());
+    sensor_to_container(2, "other sensor", 10, 200, 5000);
   }
 } //--- loop()

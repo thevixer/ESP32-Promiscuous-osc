@@ -5,7 +5,7 @@
 #include <ArduinoOSC.h>
 #include <MAX30105.h>
 #include "sensor.h"
-#include "gsr.h"
+#include "getSensorData.h"
 #include "heartRate.h"
 
 #endif
