@@ -21,7 +21,9 @@ const uint16_t send_port = 12000;
 //---------------------------- CONTROL & COUNT --------------------------------------
 int times_run = 0;
 const int period = 1000;
-unsigned long time_now = 0;
+unsigned long start_time = 0;
+unsigned long time_after_function = 0;
+uint8_t amount_of_readings = 0;
 
 //---------------------------- SENSORS --------------------------------------
 const String gsr_sensor = "GSR";
@@ -30,14 +32,15 @@ const String wifiInfo = "WiFi";
 
 void serial_print_stuff()
 {
-  Serial.printf("There have %2.fs passed since start, executed %i times\n", time_now * 0.001, times_run);
+  Serial.printf("There have %.2fs passed since start, executed %i times\n", start_time * 0.001, times_run);
   Serial.println("------------------------------------------------------------");
 }
 
 void setup()
 {
   Serial.begin(115200);
-
+  initMax();
+  delay(500);
   WiFi.begin(ssid, pwd);
   delay(500);
 
@@ -49,13 +52,8 @@ void setup()
   host = String(gateway);
   WiFi.config(ip, gateway, subnet);
 
-  Serial.print("WiFi connected,      IP = ");
-  Serial.println(WiFi.localIP());
-  Serial.print("WiFi connected, GATEWAY = ");
-  Serial.println(gateway);
-
   //---------- MAX30105 INIT --------------
-  initMax();
+  
 
   osc.begin(recv_port);
   String osc_send_succes = "Succes";
@@ -66,15 +64,27 @@ void setup()
 
 void loop()
 {
-  time_now = millis();
+  start_time = millis();
+  
   osc.parse();
+  
+  // while(amount_of_readings < 50){
+  getHeartRateData();
+  //   amount_of_readings++;
+  //   //Serial.print("Reading: "); Serial.println(amount_of_readings);
+  // }
+  // //check hoelang ik erover doe om x aantal readings te doen op de MAX30105
+  // time_after_function = millis();
+  // time_after_function -= start_time;
+  // Serial.printf("Got HR readings in %.2fs \n", time_after_function * 0.001);
 
-  if (time_now % period == 0)
-  {
+
     times_run++;
     serial_print_stuff();
     sensor_to_container(0, gsr_sensor, getGsrData());
-    sensor_to_container(1, heartRateSensor, getIrSensorValue(), getBpm());
-    sensor_to_container(2, "other sensor", 10, 200, 5000);
-  }
+    sensor_to_container(1, heartRateSensor, getIrSensorValue(), getAvgBpm());
+    //sensor_to_container(2, wifiInfo, 10, 200, 5000);
+
+
+  //amount_of_readings = 0;
 } //--- loop()

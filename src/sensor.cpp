@@ -14,7 +14,7 @@ void Sensor::print(uint8_t id) const
         Serial.println(" ");
         break;
     case 1:
-        Serial.printf("Msg: ID= %d, NAME= %s, VALUE_1 = %d, VALUE_2 = %d \n", id, name, value_1, value_2);
+        Serial.printf("Msg: ID= %d, NAME= %s, VALUE_1 = %d, VALUE_2 = ", id, name, value_1);Serial.println(value_2);
         Serial.println(" ");
         break;
     case 0:

@@ -7,7 +7,7 @@ class Sensor
     uint8_t id;
     const char *name;
     uint16_t value_1;
-    uint16_t value_2;
+    int value_2;
     uint16_t value_3;
 
 public:
@@ -20,7 +20,7 @@ public:
         this->value_1 = value_1;
     };
 
-    Sensor(uint8_t id, String name, uint16_t value_1, uint16_t value_2)
+    Sensor(uint8_t id, String name, uint16_t value_1, int value_2)
     {
         this->id = id;
         this->name = name.c_str();
@@ -28,7 +28,7 @@ public:
         this->value_2 = value_2;
     };
 
-    Sensor(uint8_t id, String name, uint16_t value_1, uint16_t value_2, uint16_t value_3)
+    Sensor(uint8_t id, String name, uint16_t value_1, int value_2, uint16_t value_3)
     {
         this->id = id;
         this->name = name.c_str();

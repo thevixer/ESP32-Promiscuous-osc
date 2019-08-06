@@ -26,14 +26,14 @@ byte rateSpot = 0;
 long lastBeat = 0; //Time at which the last beat occurred
 
 float beatsPerMinute;
-int beatAvg; 
+int avg_beat;
 long irValue;                                                             
 
 //--------------------------------------- INIT MAX ---------------------------------------------------------------
 void initMax()
 {
     // Initialize sensor
-    if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
+    if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 100kHz - 400kHz speed
     {
         Serial.println("MAX30105 was not found. Please check wiring/power. ");
         while (1)
@@ -67,53 +67,43 @@ void getHeartRateData()
 {
     irValue = particleSensor.getIR();
 
-    if (checkForBeat(irValue) == true)
+  if (checkForBeat(irValue) == true)
+  {
+    //We sensed a beat!
+    long delta = millis() - lastBeat;
+    lastBeat = millis();
+
+    beatsPerMinute = 60 / (delta / 1000.0);
+
+    if (beatsPerMinute < 255 && beatsPerMinute > 20)
     {
-        //We sensed a beat!
-        long delta = millis() - lastBeat;
-        lastBeat = millis();
+      rates[rateSpot++] = (byte)beatsPerMinute; //Store this reading in the array
+      rateSpot %= RATE_SIZE; //Wrap variable
 
-        beatsPerMinute = 60 / (delta / 1000.0);
-
-        if (beatsPerMinute < 255 && beatsPerMinute > 20)
-        {
-            rates[rateSpot++] = (byte)beatsPerMinute; //Store this reading in the array
-            rateSpot %= RATE_SIZE;                    //Wrap variable
-
-            //Take average of readings
-            beatAvg = 0;
-            for (byte x = 0; x < RATE_SIZE; x++)
-                beatAvg += rates[x];
-            beatAvg /= RATE_SIZE;
-        }
+      //Take average of readings
+      avg_beat = 0;
+      for (byte x = 0 ; x < RATE_SIZE ; x++)
+        avg_beat += rates[x];
+      avg_beat /= RATE_SIZE;
     }
-/*     Serial.print("IR=");
-    Serial.print(irValue);
-    Serial.print(", BPM=");
-    Serial.print(beatsPerMinute);
-    Serial.print(", Avg BPM=");
-    Serial.print(beatAvg); */
-    if (irValue < 50000)
-    {
-        Serial.print(" No finger?");
-    }
+  }
 } // getHeartRateData();
 
 uint16_t getIrSensorValue()
 {
-    return irValue;
+    return (uint16_t)irValue;
 }
 uint16_t getBpm()
 {
-    return beatsPerMinute;
+    return (uint16_t)beatsPerMinute;
 }
-uint16_t getAvgBpm()
+int getAvgBpm()
 {
-    return beatAvg;
+    return avg_beat;
 }
 
 //--------------------------------------- DATA to CONTAINER --------------------------------------------------
-void sensor_to_container(uint8_t id, String name, uint16_t value_1, uint16_t value_2, uint16_t value_3)
+void sensor_to_container(uint8_t id, String name, uint16_t value_1, int value_2, uint16_t value_3)
 {
 
     if(value_1 != 0 || value_2 != 0 || value_3 != 0)
