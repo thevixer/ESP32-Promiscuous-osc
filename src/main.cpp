@@ -5,13 +5,6 @@ Copyright (c) 2017 Hideaki Tai
 */
 #include "main.h"
 
-//---------------------------- WIFI --------------------------------------
-const char *ssid = "OnePlus6";
-const char *pwd = "vikiscool";
-const IPAddress ip(192, 168, 43, 120);
-IPAddress gateway;
-const IPAddress subnet(255, 255, 255, 0);
-
 //---------------------------- OSC --------------------------------------
 OscWiFi osc;
 String host;
@@ -40,17 +33,6 @@ void setup()
 {
   Serial.begin(115200);
   initMax();
-  delay(500);
-  WiFi.begin(ssid, pwd);
-  delay(500);
-
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    Serial.print(".");delay(500);
-  }
-  gateway = WiFi.gatewayIP(); // Onze gateway IP = onze host IP. Dit omdat de smartphone in AP mode staat en zijn eigen IP = gatewayIP.
-  host = String(gateway);
-  WiFi.config(ip, gateway, subnet);
 
   //---------- MAX30105 INIT --------------
   

@@ -2,6 +2,13 @@
 
 #define maxCh 13         //max Channel -> US = 11, EU = 13, Japan = 14
 
+const char *ssid = "OnePlus6";
+const char *pwd = "vikiscool";
+const IPAddress ip(192, 168, 43, 120);
+IPAddress gateway;
+const IPAddress subnet(255, 255, 255, 0);
+String host;
+
 uint8_t curChannel = 1;
 int8_t rssi_limit = -97;
  int listcount = 0;
@@ -93,6 +100,17 @@ void setup_wifi_promiscous()
     delay(1000);// delay is niet goed maar wel nodig hier
 }
 
+void setup_wifi_osc_mode(){
+  WiFi.begin(ssid, pwd);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.print(".");delay(500);
+  }
+  gateway = WiFi.gatewayIP(); // Onze gateway IP = onze host IP. Dit omdat de smartphone in AP mode staat en zijn eigen IP = gatewayIP.
+  host = String(gateway);
+  WiFi.config(ip, gateway, subnet);
+}
+
 void update_mac_addresses(){
   for (int i = 0; i <= 63; i++)
   {
@@ -121,4 +139,23 @@ void check_channel(){
 
    esp_wifi_set_channel(curChannel, WIFI_SECOND_CHAN_NONE);
    delay(1000);
+}
+
+void change_wifi_mode(bool wifi_state){
+  if(wifi_state)
+  {
+    //release promiscuous mode
+    esp_wifi_deinit();
+    Serial.println("Disconnected promiscuous mode.");
+    delay(500);
+    setup_wifi_osc_mode();
+  }
+  else
+  {
+    //release connection to app
+    WiFi.disconnect();
+    Serial.println("Disconnected wifi mode.");
+    delay(500);
+    setup_wifi_promiscous();
+  }
 }

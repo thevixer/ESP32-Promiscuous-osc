@@ -1,5 +1,5 @@
-#ifndef _WIFI_SNIFF_H
-#define _WIFI_SNIFF_H
+#ifndef _WIFI_CONNECTION_H
+#define _WIFI_CONNECTION_H
 #include <Arduino.h>
 #include <WiFi.h>
 #include "esp_wifi.h"
@@ -27,6 +27,8 @@ void add_mac(String addr, int8_t rssi);
 void update_mac_addresses();
 
 void setup_wifi_promiscous();
+void setup_wifi_osc_mode();
+void change_wifi_mode(bool wifi_state);
 IRAM_ATTR void sniffer(void *buf, wifi_promiscuous_pkt_type_t type);
 
 #endif
