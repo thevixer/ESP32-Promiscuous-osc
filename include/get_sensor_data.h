@@ -1,5 +1,5 @@
-#ifndef _GSR_H
-#define _GSR_H
+#ifndef _GSD_H
+#define _GSD_H
 #include <Arduino.h>
 
 

@@ -6,7 +6,7 @@
 #include <MAX30105.h>
 #include "wifi_sniff.h"
 #include "sensor.h"
-#include "getSensorData.h"
+#include "get_sensor_data.h"
 #include "heartRate.h"
 
 #endif
