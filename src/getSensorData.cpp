@@ -112,21 +112,21 @@ void sensor_to_container(uint8_t id, String name, uint16_t value_1, int value_2,
         {
         Sensor sensor_2 = {id, name, value_1, value_2, value_3};
         sensor_container[id] = sensor_2;
-        Serial.printf("%i -> ", id);
+        //Serial.printf("%i -> ", id);
         sensor_container[id].print(2);
         }
         else if(id == 1)
         {
         Sensor sensor_1 = {id, name, value_1, value_2};
         sensor_container[id] = sensor_1;
-        Serial.printf("%i -> ", id);
+        //Serial.printf("%i -> ", id);
         sensor_container[id].print(1);
         }
         else
         {
         Sensor sensor_0 = {id, name, value_1};
         sensor_container[id] = sensor_0;
-        Serial.printf("%i -> ", id);
+        //Serial.printf("%i -> ", id);
         sensor_container[id].print(0);
         }
     }
