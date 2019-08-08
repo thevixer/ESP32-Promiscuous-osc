@@ -11,7 +11,7 @@ http://wiki.seeedstudio.com/Grove-GSR_Sensor/
 #include <Wire.h>
 #include "MAX30105.h"
 #include "heartRate.h"
-#include "getSensorData.h"
+#include "get_sensor_data.h"
 #include "sensor.h"
 
 const uint8_t amount_of_sensors = 3;

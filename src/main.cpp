@@ -6,10 +6,10 @@ Copyright (c) 2017 Hideaki Tai
 #include "main.h"
 
 //---------------------------- OSC --------------------------------------
-OscWiFi osc;
-String host;
-const uint16_t recv_port = 10000;
-const uint16_t send_port = 12000;
+// OscWiFi osc;
+// String host;
+// const uint16_t recv_port = 10000;
+// const uint16_t send_port = 12000;
 
 //---------------------------- CONTROL & COUNT --------------------------------------
 int times_run = 0;
@@ -17,6 +17,8 @@ const int period = 1000;
 unsigned long start_time = 0;
 unsigned long time_after_function = 0;
 uint8_t amount_of_readings = 0;
+
+bool wifi_state;
 
 //---------------------------- SENSORS --------------------------------------
 const String gsr_sensor = "GSR";
@@ -32,27 +34,35 @@ void serial_print_stuff()
 void setup()
 {
   Serial.begin(115200);
+  setup_wifi_promiscous();
   initMax();
 
-  //---------- MAX30105 INIT --------------
-  
-
-  osc.begin(recv_port);
-  String osc_send_succes = "Succes";
-  bool send = true;
-  osc.send(host, send_port, "/start", osc_send_succes, send);
+  // osc.begin(recv_port);
+  // String osc_send_succes = "Succes";
+  // bool send = true;
+  // osc.send(host, send_port, "/start", osc_send_succes, send);
 
 } //--- setup()
 
 void loop()
 {
   start_time = millis();
-  osc.parse();
-  
-  getHeartRateData();
-  times_run++;
-  //serial_print_stuff();
+  //osc.parse();
+
+  if(!wifi_state)
+  {
+    update_mac_addresses();
+    getHeartRateData();
+  }
+  else if(wifi_state)
+  {
   sensor_to_container(0, gsr_sensor, getGsrData());
   sensor_to_container(1, heartRateSensor, getIrSensorValue(), getAvgBpm());
-  //sensor_to_container(2, wifiInfo, 10, 200, 5000);
+  }
+  else
+  {
+    Serial.println("Something went wrong man...");
+  }
+  
+  times_run++;
 } //--- loop()

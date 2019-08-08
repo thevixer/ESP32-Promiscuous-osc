@@ -1,4 +1,4 @@
-#include "wifi_sniff.h"
+#include "wifi_connection.h"
 
 #define maxCh 13         //max Channel -> US = 11, EU = 13, Japan = 14
 
@@ -7,7 +7,7 @@ const char *pwd = "vikiscool";
 const IPAddress ip(192, 168, 43, 120);
 IPAddress gateway;
 const IPAddress subnet(255, 255, 255, 0);
-String host;
+
 
 uint8_t curChannel = 1;
 int8_t rssi_limit = -97;
@@ -88,6 +88,7 @@ IRAM_ATTR void sniffer(void *buf, wifi_promiscuous_pkt_type_t type) //Dit is de 
 void setup_wifi_promiscous()
 {
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    cfg.wifi_task_core_id = 0;
     esp_wifi_init(&cfg);
     esp_wifi_set_storage(WIFI_STORAGE_RAM);
     esp_wifi_set_mode(WIFI_MODE_NULL);
@@ -97,7 +98,9 @@ void setup_wifi_promiscous()
     esp_wifi_set_promiscuous_rx_cb(&sniffer);
     esp_wifi_set_channel(curChannel, WIFI_SECOND_CHAN_NONE);
     Serial.println("starting promiscous mode!");
+    wifi_state = false;
     delay(1000);// delay is niet goed maar wel nodig hier
+
 }
 
 void setup_wifi_osc_mode(){
@@ -108,6 +111,7 @@ void setup_wifi_osc_mode(){
   }
   gateway = WiFi.gatewayIP(); // Onze gateway IP = onze host IP. Dit omdat de smartphone in AP mode staat en zijn eigen IP = gatewayIP.
   host = String(gateway);
+  wifi_state = true;
   WiFi.config(ip, gateway, subnet);
 }
 
@@ -145,6 +149,8 @@ void change_wifi_mode(bool wifi_state){
   if(wifi_state)
   {
     //release promiscuous mode
+    WiFi.mode(WIFI_OFF);
+    esp_wifi_stop();
     esp_wifi_deinit();
     Serial.println("Disconnected promiscuous mode.");
     delay(500);
@@ -153,7 +159,9 @@ void change_wifi_mode(bool wifi_state){
   else
   {
     //release connection to app
-    WiFi.disconnect();
+    WiFi.mode(WIFI_OFF);
+    esp_wifi_stop();
+    esp_wifi_deinit();
     Serial.println("Disconnected wifi mode.");
     delay(500);
     setup_wifi_promiscous();

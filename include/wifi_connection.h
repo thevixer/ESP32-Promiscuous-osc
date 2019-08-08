@@ -31,4 +31,7 @@ void setup_wifi_osc_mode();
 void change_wifi_mode(bool wifi_state);
 IRAM_ATTR void sniffer(void *buf, wifi_promiscuous_pkt_type_t type);
 
+extern String host;
+extern bool wifi_state;
+
 #endif
