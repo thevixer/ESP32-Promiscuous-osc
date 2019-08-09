@@ -13,6 +13,7 @@ uint8_t curChannel = 1;
 int8_t rssi_limit = -97;
 uint8_t listcount = 0;
 String maclist[64][3];
+uint8_t attempt = 0;
 
 const wifi_promiscuous_filter_t filt = // filter the packets with type of WIFI_PKT_MGMT | filter the packets with type of WIFI_PKT_DATA
     {
@@ -105,14 +106,33 @@ void setup_wifi_promiscous()
 
 void setup_wifi_osc_mode(){
   WiFi.begin(ssid, pwd);
-  while (WiFi.status() != WL_CONNECTED)
+  delay(5000);
+  if(WiFi.status() == WL_CONNECTED)
   {
-    Serial.print(".");delay(500);
+    attempt = 0;
+    Serial.println("Connected to hotspot!");
+    gateway = WiFi.gatewayIP(); // Onze gateway IP = onze host IP. Dit omdat de smartphone in AP mode staat en zijn eigen IP = gatewayIP.
+    host = String(gateway);
+    wifi_state = true;
+    WiFi.config(ip, gateway, subnet);
   }
-  gateway = WiFi.gatewayIP(); // Onze gateway IP = onze host IP. Dit omdat de smartphone in AP mode staat en zijn eigen IP = gatewayIP.
-  host = String(gateway);
-  wifi_state = true;
-  WiFi.config(ip, gateway, subnet);
+  if(WiFi.status() == WL_CONNECT_FAILED)
+  {
+    attempt++;
+    Serial.println("Connection failed...");
+    delay(1000);
+    Serial.print("Retrying to reconnect, attempt: ");Serial.println(attempt);
+    setup_wifi_osc_mode();
+  }
+  if(WiFi.status() == WL_CONNECTION_LOST)
+  {
+    attempt++;
+    Serial.println("Connection lost...");
+    delay(1000);
+    Serial.print("Trying to reconnect, attempt: ");Serial.println(attempt);
+    setup_wifi_osc_mode();
+  }
+
 }
 
 void update_mac_addresses(){
@@ -124,12 +144,10 @@ void update_mac_addresses(){
       {
         maclist[i][1] = String(maclist[i][1].toInt() + 1);
         String active = (maclist[i][1] == "OFFLINE") ? "." : "s";
-        Serial.println("MAC: " + maclist[i][0] + " RSSi: -" + maclist[i][2] + " ACTIVE: " + maclist[i][1] + active);
       }
       else
       {
         maclist[i][1] = "OFFLINE";
-        Serial.println("MAC: " + maclist[i][0] + " RSSi: -" + maclist[i][2] + " ACTIVE: " + maclist[i][1] + ".");
       }
     }
   }
@@ -150,8 +168,6 @@ void change_wifi_mode(bool wifi_state){
   {
     //release promiscuous mode
     WiFi.mode(WIFI_OFF);
-    //esp_wifi_stop();
-    //esp_wifi_deinit();
     Serial.println("Disconnected promiscuous mode.");
     delay(500);
     setup_wifi_osc_mode();
@@ -160,8 +176,6 @@ void change_wifi_mode(bool wifi_state){
   {
     //release connection to app
     WiFi.mode(WIFI_OFF);
-    esp_wifi_stop();
-    esp_wifi_deinit();
     Serial.println("Disconnected wifi mode.");
     delay(500);
     setup_wifi_promiscous();

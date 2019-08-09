@@ -9,15 +9,16 @@ Copyright (c) 2017 Hideaki Tai
 //uint8_t listcount; 
 
 //---------------------------- OSC --------------------------------------
-// OscWiFi osc;
+OscWiFi osc;
 String host;
 // const uint16_t recv_port = 10000;
 // const uint16_t send_port = 12000;
 
 //---------------------------- CONTROL & COUNT --------------------------------------
 int times_run = 0;
-uint32_t counter;
-const uint32_t wifi_timer = 5000;
+uint32_t time_sinds_start;
+uint32_t time_in_current_mode = 0;
+const uint32_t time_to_complete = 20000; // time in ms
 bool wifi_state;
 
 //---------------------------- SENSORS --------------------------------------
@@ -27,7 +28,7 @@ const String wifiInfo = "WiFi";
 
 void serial_print_stuff()
 {
-  Serial.printf("There have %.2fs passed since start, executed %i times\n", counter * 0.001, times_run);
+  Serial.printf("There have %.2fs passed since start, executed %i times\n", time_sinds_start * 0.001, times_run);
   Serial.println("------------------------------------------------------------");
 }
 
@@ -46,14 +47,15 @@ void setup()
 
 void loop()
 {
-  counter = millis();
-  if(counter >= wifi_timer)
+  time_sinds_start = millis();
+
+  if(time_sinds_start >= time_in_current_mode + time_to_complete)
   {
     wifi_state = !wifi_state;
     change_wifi_mode(wifi_state);
-    counter = 0;
+    time_in_current_mode = time_sinds_start;
   }
-  //osc.parse();
+  //
 
 
   if(!wifi_state)
@@ -63,6 +65,7 @@ void loop()
   }
   if(wifi_state)
   {
+    osc.parse();
     sensor_to_container(0, gsr_sensor, getGsrData());
     sensor_to_container(1, heartRateSensor, getIrSensorValue(), getAvgBpm());
     for(uint8_t i = 0; i < listcount; i++)
@@ -73,4 +76,5 @@ void loop()
   }
 
   times_run++;
+  Serial.printf("TIMES RAN: %d, TSS: %d, TICM: %d \n", times_run, time_sinds_start, time_in_current_mode);
 } //--- loop()

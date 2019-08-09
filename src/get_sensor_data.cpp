@@ -27,7 +27,7 @@ long lastBeat = 0; //Time at which the last beat occurred
 
 float beatsPerMinute;
 int avg_beat;
-long irValue;                                                             
+long irValue;
 
 //--------------------------------------- INIT MAX ---------------------------------------------------------------
 void initMax()
@@ -36,8 +36,8 @@ void initMax()
     if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 100kHz - 400kHz speed
     {
         Serial.println("MAX30105 was not found. Please check wiring/power. ");
-        while (1)
-            ;
+        // while (1); 
+        // "Wtf does this empty while loop?"~ Sjonnie.
     }
     Serial.println("Place your index finger on the sensor with steady pressure.");
 
@@ -58,8 +58,7 @@ uint16_t getGsrData()
         gsr_sensor_value = analogRead(GSR);
         sum += gsr_sensor_value;
     }
-    gsr_average = map(sum * 0.1, 0, 4096, 0, 512);
-    return gsr_average;
+    return gsr_average = map(sum * 0.1, 0, 4096, 0, 512);;
 }
 
 //--------------------------------------- GET HR DATA ---------------------------------------------------------
@@ -67,36 +66,41 @@ void getHeartRateData()
 {
     irValue = particleSensor.getIR();
 
-  if (checkForBeat(irValue) == true)
-  {
-    //We sensed a beat!
-    long delta = millis() - lastBeat;
-    lastBeat = millis();
-
-    beatsPerMinute = 60 / (delta / 1000.0);
-
-    if (beatsPerMinute < 255 && beatsPerMinute > 20)
+    if (checkForBeat(irValue) == true)
     {
-      rates[rateSpot++] = (byte)beatsPerMinute; //Store this reading in the array
-      rateSpot %= RATE_SIZE; //Wrap variable
+        //We sensed a beat!
+        long delta = millis() - lastBeat;
+        lastBeat = millis();
 
-      //Take average of readings
-      avg_beat = 0;
-      for (byte x = 0 ; x < RATE_SIZE ; x++)
-        avg_beat += rates[x];
-      avg_beat /= RATE_SIZE;
+        beatsPerMinute = 60 / (delta / 1000.0);
+
+        if (beatsPerMinute < 255 && beatsPerMinute > 20)
+        {
+            rates[rateSpot++] = (byte)beatsPerMinute; //Store this reading in the array
+            rateSpot %= RATE_SIZE;                    //Wrap variable
+
+            //Take average of readings
+            avg_beat = 0;
+            for (byte x = 0; x < RATE_SIZE; x++)
+            {
+                avg_beat += rates[x];
+                avg_beat /= RATE_SIZE;
+            }
+    
+        }
     }
-  }
 } // getHeartRateData();
 
 uint16_t getIrSensorValue()
 {
     return (uint16_t)irValue;
 }
+
 uint16_t getBpm()
 {
     return (uint16_t)beatsPerMinute;
 }
+
 int getAvgBpm()
 {
     return avg_beat;
@@ -106,29 +110,23 @@ int getAvgBpm()
 void sensor_to_container(uint8_t id, String name, uint16_t value_1, int value_2, uint16_t value_3)
 {
 
-    if(value_1 != 0 || value_2 != 0 || value_3 != 0)
+    if (value_1 != 0 || value_2 != 0 || value_3 != 0)
     {
-        if(id == 2)
+        Sensor sensor;
+        if (id == 2)
         {
-        Sensor sensor_2 = {id, name, value_1, value_2, value_3};
-        sensor_container[id] = sensor_2;
-        //Serial.printf("%i -> ", id);
-        sensor_container[id].print(2);
+            sensor = {id, name, value_1, value_2, value_3};
         }
-        else if(id == 1)
+        else if (id == 1)
         {
-        Sensor sensor_1 = {id, name, value_1, value_2};
-        sensor_container[id] = sensor_1;
-        //Serial.printf("%i -> ", id);
-        sensor_container[id].print(1);
+            sensor = {id, name, value_1, value_2};
         }
         else
         {
-        Sensor sensor_0 = {id, name, value_1};
-        sensor_container[id] = sensor_0;
-        //Serial.printf("%i -> ", id);
-        sensor_container[id].print(0);
+            sensor = {id, name, value_1};
         }
+        sensor_container[id] = sensor;
+        sensor_container[id].print(id);
     }
     else
     {
