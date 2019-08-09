@@ -5,19 +5,19 @@ Copyright (c) 2017 Hideaki Tai
 */
 #include "main.h"
 
+//String maclist[64];
+//uint8_t listcount; 
+
 //---------------------------- OSC --------------------------------------
 // OscWiFi osc;
-// String host;
+String host;
 // const uint16_t recv_port = 10000;
 // const uint16_t send_port = 12000;
 
 //---------------------------- CONTROL & COUNT --------------------------------------
 int times_run = 0;
-const int period = 1000;
-unsigned long start_time = 0;
-unsigned long time_after_function = 0;
-uint8_t amount_of_readings = 0;
-
+uint32_t counter;
+const uint32_t wifi_timer = 5000;
 bool wifi_state;
 
 //---------------------------- SENSORS --------------------------------------
@@ -27,7 +27,7 @@ const String wifiInfo = "WiFi";
 
 void serial_print_stuff()
 {
-  Serial.printf("There have %.2fs passed since start, executed %i times\n", start_time * 0.001, times_run);
+  Serial.printf("There have %.2fs passed since start, executed %i times\n", counter * 0.001, times_run);
   Serial.println("------------------------------------------------------------");
 }
 
@@ -46,23 +46,31 @@ void setup()
 
 void loop()
 {
-  start_time = millis();
+  counter = millis();
+  if(counter >= wifi_timer)
+  {
+    wifi_state = !wifi_state;
+    change_wifi_mode(wifi_state);
+    counter = 0;
+  }
   //osc.parse();
+
 
   if(!wifi_state)
   {
     update_mac_addresses();
     getHeartRateData();
   }
-  else if(wifi_state)
+  if(wifi_state)
   {
-  sensor_to_container(0, gsr_sensor, getGsrData());
-  sensor_to_container(1, heartRateSensor, getIrSensorValue(), getAvgBpm());
+    sensor_to_container(0, gsr_sensor, getGsrData());
+    sensor_to_container(1, heartRateSensor, getIrSensorValue(), getAvgBpm());
+    for(uint8_t i = 0; i < listcount; i++)
+    {
+      Serial.print("MAC: ");Serial.print(maclist[i][0]);Serial.print(" ");
+      Serial.print("RSSI: ");Serial.println(maclist[i][2]);
+    }
   }
-  else
-  {
-    Serial.println("Something went wrong man...");
-  }
-  
+
   times_run++;
 } //--- loop()

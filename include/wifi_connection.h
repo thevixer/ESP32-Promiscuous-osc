@@ -33,5 +33,7 @@ IRAM_ATTR void sniffer(void *buf, wifi_promiscuous_pkt_type_t type);
 
 extern String host;
 extern bool wifi_state;
+extern String maclist[64][3];
+extern uint8_t listcount;
 
 #endif

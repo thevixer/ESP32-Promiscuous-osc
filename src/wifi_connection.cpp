@@ -11,7 +11,7 @@ const IPAddress subnet(255, 255, 255, 0);
 
 uint8_t curChannel = 1;
 int8_t rssi_limit = -97;
- int listcount = 0;
+uint8_t listcount = 0;
 String maclist[64][3];
 
 const wifi_promiscuous_filter_t filt = // filter the packets with type of WIFI_PKT_MGMT | filter the packets with type of WIFI_PKT_DATA
@@ -89,14 +89,14 @@ void setup_wifi_promiscous()
 {
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     cfg.wifi_task_core_id = 0;
-    esp_wifi_init(&cfg);
-    esp_wifi_set_storage(WIFI_STORAGE_RAM);
-    esp_wifi_set_mode(WIFI_MODE_NULL);
-    esp_wifi_start();
-    esp_wifi_set_promiscuous(true);
-    esp_wifi_set_promiscuous_filter(&filt);
-    esp_wifi_set_promiscuous_rx_cb(&sniffer);
-    esp_wifi_set_channel(curChannel, WIFI_SECOND_CHAN_NONE);
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+    ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_NULL));
+    ESP_ERROR_CHECK(esp_wifi_stop());
+    ESP_ERROR_CHECK(esp_wifi_set_promiscuous_filter(&filt));
+    ESP_ERROR_CHECK(esp_wifi_set_promiscuous_rx_cb(&sniffer));
+    ESP_ERROR_CHECK(esp_wifi_set_promiscuous(true));
+    ESP_ERROR_CHECK(esp_wifi_set_channel(curChannel, WIFI_SECOND_CHAN_NONE));
     Serial.println("starting promiscous mode!");
     wifi_state = false;
     delay(1000);// delay is niet goed maar wel nodig hier
@@ -123,7 +123,7 @@ void update_mac_addresses(){
       if (!(maclist[i][2].toInt() < rssi_limit)) // check if rssi  -80
       {
         maclist[i][1] = String(maclist[i][1].toInt() + 1);
-        String active = (maclist[i][1] == "OFFLINE") ? "." : "s.";
+        String active = (maclist[i][1] == "OFFLINE") ? "." : "s";
         Serial.println("MAC: " + maclist[i][0] + " RSSi: -" + maclist[i][2] + " ACTIVE: " + maclist[i][1] + active);
       }
       else
@@ -150,8 +150,8 @@ void change_wifi_mode(bool wifi_state){
   {
     //release promiscuous mode
     WiFi.mode(WIFI_OFF);
-    esp_wifi_stop();
-    esp_wifi_deinit();
+    //esp_wifi_stop();
+    //esp_wifi_deinit();
     Serial.println("Disconnected promiscuous mode.");
     delay(500);
     setup_wifi_osc_mode();
