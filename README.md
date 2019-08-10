@@ -1,7 +1,7 @@
 # Personal Technology Sniffer
 
 This project is made for my Bachelor's finalwork. It enables you to monitor your own "Safety levels" by scanning your environment 
-for dangerous "Technological activities". (It's a WiFi sniffer, with some personal sensors).
+for dangerous "Technological activities" (It's a WiFi sniffer, with some personal sensors).
 
 ## Getting Started
 
@@ -9,7 +9,7 @@ Some quick guideliness if you wish to run this yourself.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+The IDE and plugin
 
 * [VSCode](https://code.visualstudio.com/) - Recent version of Visual Studio Code
 * [PlatformIO](https://platformio.org/) - Open source ecosystem for IoT development
@@ -27,6 +27,7 @@ Afterwards open this project via PlatformIO in VSCode.
 Make sure you setup the platformio.ini correct for your system.
 
 * Check if the COM port is correct
+* Check if all libraries are included, you can install them via PlatformIO
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
