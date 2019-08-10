@@ -21,61 +21,18 @@ The sensors I used for monitoring health and nervousness.
 
 ### Installing
 
-Folow the setup tutorial provided by [PlatformIO VSCode setup](https://docs.platformio.org/en/latest/ide/vscode.html)
+Folow the setup tutorial provided by [PlatformIO VSCode setup](https://docs.platformio.org/en/latest/ide/vscode.html).
+Afterwards open this project via PlatformIO in VSCode.
 
+Make sure you setup the platformio.ini correct for your system.
 
-
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
+* Check if the COM port is correct
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Inspired by this project on github [Paxcounter](https://github.com/cyberman54/ESP32-Paxcounter)
+* Hat tip to everyone at [Gitter arduino-esp32](https://gitter.im/espressif/arduino-esp32) for responding fast to my questions.
+* [David Walschots](https://github.com/davidwalschots) for coding tips and improvements. 
