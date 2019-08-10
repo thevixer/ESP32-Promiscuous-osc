@@ -2,8 +2,6 @@
 #define _GSD_H
 #include <Arduino.h>
 
-
-
 uint16_t getGsrData();
 uint16_t getIrSensorValue();
 uint16_t getBpm();
