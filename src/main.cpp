@@ -5,12 +5,6 @@ Copyright (c) 2017 Hideaki Tai
 */
 #include "main.h"
 
-//---------------------------- OSC
-// OscWiFi osc;
-String host;
-// const uint16_t recv_port = 10000;
-// const uint16_t send_port = 12000;
-
 //---------------------------- CONTROL & COUNT
 int times_run = 0;
 uint32_t time_sinds_start;
@@ -27,12 +21,6 @@ void setup() {
   Serial.begin(115200);
   setup_wifi_promiscous();
   initMax();
-
-  // osc.begin(recv_port);
-  // String osc_send_succes = "Succes";
-  // bool send = true;
-  // osc.send(host, send_port, "/start", osc_send_succes, send);
-
 }
 
 void loop() {

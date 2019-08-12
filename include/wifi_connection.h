@@ -1,8 +1,7 @@
 #ifndef _WIFI_CONNECTION_H
 #define _WIFI_CONNECTION_H
-#include "esp_wifi.h"
 #include <Arduino.h>
-#include <WiFi.h>
+#include "esp_wifi.h"
 
 typedef struct {
   unsigned frame_ctrl : 16;
@@ -27,7 +26,7 @@ void setup_wifi_osc_mode();
 void change_wifi_mode(bool wifi_state);
 IRAM_ATTR void sniffer(void *buf, wifi_promiscuous_pkt_type_t type);
 
-extern String host;
+extern String mac_host;
 extern bool wifi_state;
 extern String maclist[64][3];
 extern uint8_t listcount;

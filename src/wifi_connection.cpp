@@ -1,4 +1,7 @@
 #include "wifi_connection.h"
+#include <WiFi.h>
+#include <ArduinoOSC.h>
+
 
 #define maxCh 13
 
@@ -13,6 +16,13 @@ int8_t rssi_limit = -97;
 uint8_t listcount = 0;
 String maclist[64][3];
 uint8_t attempt = 0;
+
+String mac_host;
+
+OscWiFi osc;
+const uint16_t send_port = 12000;
+OscMessage msg(mac_host, send_port, "/mac/addresses");
+OscMessage rssi_msg(mac_host, send_port, "/mac/rssi");
 
 const wifi_promiscuous_filter_t filt = {
     .filter_mask = WIFI_PROMIS_FILTER_MASK_MGMT | WIFI_PROMIS_FILTER_MASK_DATA};
@@ -31,6 +41,9 @@ void add_mac(String addr, int8_t rssi) {
   }
 
   if (!added) {
+
+   msg.pushString(addr);
+    
     maclist[listcount][0] = addr;
     maclist[listcount][1] = "0";
     maclist[listcount][2] = abs(rssi);
@@ -88,9 +101,11 @@ void setup_wifi_osc_mode() {
   Serial.println("Connected to hotspot!");
   Serial.println("--------------------------");
   gateway = WiFi.gatewayIP();
-  host = String(gateway);
+  mac_host = String(gateway);
   wifi_state = true;
   WiFi.config(ip, gateway, subnet);
+
+  osc.send(msg);
 }
 
 void update_mac_addresses() {

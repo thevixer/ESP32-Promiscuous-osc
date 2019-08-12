@@ -14,6 +14,7 @@ http://wiki.seeedstudio.com/Grove-GSR_Sensor/
 #include "sensor.h"
 #include <Wire.h>
 
+
 const uint8_t amount_of_sensors = 3;
 const byte RATE_SIZE = 4;
 byte rates[RATE_SIZE];
