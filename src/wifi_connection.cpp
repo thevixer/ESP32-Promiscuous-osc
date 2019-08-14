@@ -15,7 +15,6 @@ uint8_t curChannel = 1;
 int8_t rssi_limit = -97;
 uint8_t listcount = 0;
 String maclist[64][3];
-String mac_host;
 
 
 const wifi_promiscuous_filter_t filt = {
@@ -77,12 +76,7 @@ void setup_wifi_promiscous() {
   Serial.println("Start sniffing for packets!");
   Serial.println("--------------------------");
 }
-String IpAddress2String(IPAddress& ipAddress){
-  return String(ipAddress[0]) + String(".") + \
-         String(ipAddress[1]) + String(".") + \
-         String(ipAddress[2]) + String(".") + \
-         String(ipAddress[3])  ;
-}
+
 void setup_wifi_osc_mode() {
   if (!WiFi.isConnected()) {
     WiFi.begin(ssid, pwd);
@@ -96,13 +90,11 @@ void setup_wifi_osc_mode() {
   Serial.println("Connected to hotspot!");
   Serial.println("--------------------------");
   gateway = WiFi.gatewayIP();
-  mac_host = IpAddress2String(gateway);
   WiFi.config(ip, gateway, subnet);
 }
 
-String get_host(){
-  String host = IpAddress2String(gateway);
-  return host;
+IPAddress get_host(){
+  return gateway;
 }
 
 void update_mac_addresses() {

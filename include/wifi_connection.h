@@ -25,8 +25,7 @@ void setup_wifi_promiscous();
 void setup_wifi_osc_mode();
 void change_to_wifi_osc();
 void change_to_promisc(); 
-String get_host();
-String IpAddress2String(IPAddress& ipAddress);
+IPAddress get_host();
 IRAM_ATTR void sniffer(void *buf, wifi_promiscuous_pkt_type_t type);
 
 
