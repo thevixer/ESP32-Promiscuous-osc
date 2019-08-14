@@ -23,11 +23,13 @@ void add_mac(String addr, int8_t rssi);
 void update_mac_addresses();
 void setup_wifi_promiscous();
 void setup_wifi_osc_mode();
-void change_wifi_mode(bool wifi_state);
+void change_to_wifi_osc();
+void change_to_promisc(); 
+String get_host();
+String IpAddress2String(IPAddress& ipAddress);
 IRAM_ATTR void sniffer(void *buf, wifi_promiscuous_pkt_type_t type);
 
-extern String mac_host;
-extern bool wifi_state;
+
 extern String maclist[64][3];
 extern uint8_t listcount;
 

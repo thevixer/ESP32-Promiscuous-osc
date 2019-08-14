@@ -1,6 +1,6 @@
 #include "wifi_connection.h"
 #include <WiFi.h>
-#include <ArduinoOSC.h>
+
 
 
 #define maxCh 13
@@ -15,14 +15,8 @@ uint8_t curChannel = 1;
 int8_t rssi_limit = -97;
 uint8_t listcount = 0;
 String maclist[64][3];
-uint8_t attempt = 0;
-
 String mac_host;
 
-OscWiFi osc;
-const uint16_t send_port = 12000;
-OscMessage msg(mac_host, send_port, "/mac/addresses");
-OscMessage rssi_msg(mac_host, send_port, "/mac/rssi");
 
 const wifi_promiscuous_filter_t filt = {
     .filter_mask = WIFI_PROMIS_FILTER_MASK_MGMT | WIFI_PROMIS_FILTER_MASK_DATA};
@@ -41,9 +35,6 @@ void add_mac(String addr, int8_t rssi) {
   }
 
   if (!added) {
-
-   msg.pushString(addr);
-    
     maclist[listcount][0] = addr;
     maclist[listcount][1] = "0";
     maclist[listcount][2] = abs(rssi);
@@ -85,9 +76,13 @@ void setup_wifi_promiscous() {
   Serial.println("--------------------------");
   Serial.println("Start sniffing for packets!");
   Serial.println("--------------------------");
-  wifi_state = false;
 }
-
+String IpAddress2String(IPAddress& ipAddress){
+  return String(ipAddress[0]) + String(".") + \
+         String(ipAddress[1]) + String(".") + \
+         String(ipAddress[2]) + String(".") + \
+         String(ipAddress[3])  ;
+}
 void setup_wifi_osc_mode() {
   if (!WiFi.isConnected()) {
     WiFi.begin(ssid, pwd);
@@ -101,11 +96,13 @@ void setup_wifi_osc_mode() {
   Serial.println("Connected to hotspot!");
   Serial.println("--------------------------");
   gateway = WiFi.gatewayIP();
-  mac_host = String(gateway);
-  wifi_state = true;
+  mac_host = IpAddress2String(gateway);
   WiFi.config(ip, gateway, subnet);
+}
 
-  osc.send(msg);
+String get_host(){
+  String host = IpAddress2String(gateway);
+  return host;
 }
 
 void update_mac_addresses() {
@@ -129,21 +126,20 @@ void check_channel() {
   delay(1000);
 }
 
-void change_wifi_mode(bool wifi_state) {
-  if (wifi_state) {
-    ESP_ERROR_CHECK(esp_wifi_set_promiscuous(false));
-    Serial.println("--------------------------");
-    Serial.println("Disconnected promiscuous mode.");
-    Serial.println("--------------------------");
-    delay(1000);
-    setup_wifi_osc_mode();
-  }
-  if (!wifi_state) {
+void change_to_promisc() {
     WiFi.disconnect(true);
     Serial.println("--------------------------");
     Serial.println("Disconnected wifi mode.");
     Serial.println("--------------------------");
     delay(1000);
     setup_wifi_promiscous();
-  }
+}
+
+void change_to_wifi_osc(){
+    ESP_ERROR_CHECK(esp_wifi_set_promiscuous(false));
+    Serial.println("--------------------------");
+    Serial.println("Disconnected promiscuous mode.");
+    Serial.println("--------------------------");
+    delay(1000);
+    setup_wifi_osc_mode();
 }

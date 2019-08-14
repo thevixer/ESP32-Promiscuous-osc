@@ -4,18 +4,25 @@ https://github.com/hideakitai/ArduinoOSC
 Copyright (c) 2017 Hideaki Tai
 */
 #include "main.h"
+#include <ArduinoOSC.h>
 
 //---------------------------- CONTROL & COUNT
-int times_run = 0;
 uint32_t time_sinds_start;
 uint32_t time_in_current_mode = 0;
 const uint32_t time_to_complete = 5000;
-bool wifi_state;
 
 //---------------------------- SENSORS 
 const String gsr_sensor = "GSR";
 const String heartRateSensor = "MAX30105";
 const String wifiInfo = "WiFi";
+
+//---------------------------- OSC
+OscWiFi osc;
+String host;
+const String& addr = "/mac/addresses";
+const uint16_t recv_port = 10000;
+const uint16_t send_port = 12000;
+
 
 void setup() {
   Serial.begin(115200);
@@ -25,37 +32,36 @@ void setup() {
 
 void loop() {
   time_sinds_start = millis();
+  
 
   if (time_sinds_start >= time_in_current_mode + time_to_complete) {
-    wifi_state = !wifi_state;
-    change_wifi_mode(wifi_state);
+    change_to_wifi_osc();
+    host = get_host();
+    uint16_t size_array = sizeof(maclist)/sizeof(maclist[0]);
+    Serial.println(size_array);
+    osc.parse();
+
+    sensor_to_container(0, gsr_sensor, getGsrData());
+    sensor_to_container(1, heartRateSensor, getIrSensorValue(), getAvgBpm());
+
+    for(uint16_t i = 0; i < 64; i++){
+      osc.send(host, send_port, addr, maclist[i][0]);
+      Serial.print("Send OSC msg-> Host: ");Serial.print(host);Serial.print(" Port: ");Serial.print(send_port);Serial.print(" Address: ");Serial.print(addr);
+      Serial.print(" Value: ");Serial.println(maclist[i][0]);
+      delay(100);
+    }
+    delay(1000);
+    change_to_promisc();
     time_in_current_mode = time_sinds_start;
   }
 
-  if (!wifi_state) {
     update_mac_addresses();
     getHeartRateData();
-  }
 
-  if (wifi_state) {
-    sensor_to_container(0, gsr_sensor, getGsrData());
-    sensor_to_container(1, heartRateSensor, getIrSensorValue(), getAvgBpm());
-    Serial.println(" ");
-    for (uint8_t i = 0; i < listcount; i++) {
-      Serial.print("MAC: ");
-      Serial.print(maclist[i][0]);
-      Serial.print(" ");
-      Serial.print("RSSI: ");
-      Serial.println(maclist[i][2]);
-    }
-  }
 
-  times_run++;
-  if(wifi_state) {
-    Serial.printf("TIMES RAN: %d, TSS: %d, TICM: %d \n", times_run, time_sinds_start, time_in_current_mode);
-    Serial.println("-----------------------------------------------------------------------------------------");
-  }
-  else {
+ 
+
+
     Serial.print("Sniff ");
-  }
+  
 } 
