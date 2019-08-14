@@ -39,6 +39,7 @@ void loop() {
     host = get_host();
     uint16_t size_array = sizeof(maclist)/sizeof(maclist[0]);
     Serial.println(size_array);
+    // osc.parse seems to be throwing the error I can't really figure out why...
     osc.parse();
 
     sensor_to_container(0, gsr_sensor, getGsrData());
