@@ -1,4 +1,4 @@
-# Personal Technology Sniffer
+# ESP32 PROMISCUOUS OSC
 
 This project is made for my Bachelor's finalwork. It enables you to monitor your own "Safety levels" by scanning your environment 
 for dangerous "Technological activities" (It's a WiFi sniffer, with some personal sensors).
