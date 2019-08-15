@@ -23,6 +23,7 @@ IPAddress host;
 const char addr[15] = "/mac/addresses";
 const uint16_t recv_port = 10000;
 const uint16_t send_port = 12000;
+String test = "Testystringy";
 
 
 void setup() {
@@ -42,23 +43,25 @@ void loop() {
 
     
 
-    uint16_t size_array = sizeof(maclist)/sizeof(maclist[0]);
+    uint16_t size_array = sizeof(maclist)/sizeof(maclist[0][0]);
     Serial.println(size_array);
     // osc.parse seems to be throwing the error I can't really figure out why...
 
-    sensor_to_container(0, gsr_sensor, getGsrData());
-    sensor_to_container(1, heartRateSensor, getIrSensorValue(), getAvgBpm());
+    //sensor_to_container(0, gsr_sensor, getGsrData());
+    //sensor_to_container(1, heartRateSensor, getIrSensorValue(), getAvgBpm());
 
     for(uint16_t i = 0; i < 64; i++){
-      OSCMessage msg(addr);
-      msg.add(maclist[i][0]);
-      Udp.beginPacket(host, send_port);
-      msg.send(Udp);
-      Udp.endPacket();
-      msg.empty();
-      //Serial.print("Send OSC msg-> Host: ");Serial.print(host);Serial.print(" Port: ");Serial.print(send_port);Serial.print(" Address: ");Serial.print(addr);
-      //Serial.print(" Value: ");Serial.println(maclist[i][0]);
-      delay(100);
+      if(maclist[i][0].length() > 11){
+        OSCMessage msg(addr);
+        msg.add(test);
+        Udp.beginPacket(host, send_port);
+        msg.send(Udp);
+        Udp.endPacket();
+        msg.empty();
+        Serial.print("Send OSC -> Value: ");Serial.println(test);
+        delay(100);
+      }
+
     }
     delay(1000);
     change_to_promisc();
@@ -67,10 +70,6 @@ void loop() {
 
     update_mac_addresses();
     getHeartRateData();
-
-
- 
-
 
     Serial.print("Sniff ");
   
