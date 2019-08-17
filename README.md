@@ -3,6 +3,8 @@
 This project is made for my Bachelor's finalwork. It enables you to monitor your own "Safety levels" by scanning your environment 
 for dangerous "Technological activities" (It's a WiFi sniffer, with some personal sensors).
 
+**VERY IMPORTANT:** *This code is only for educational purposes. We don’t want to listen for any private communication and we don't do it. All packets that you can listen with this code are public packets without any encryption or secure layer on it, continuously broadcasted to the air by smartphones. Please, check which country's laws applies to you before use this code.*
+
 ## Getting Started
 
 Some quick guideliness if you wish to run this yourself.
