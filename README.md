@@ -7,7 +7,7 @@ for dangerous "Technological activities" (It's a WiFi sniffer, with some persona
 
 ## Getting Started
 
-Some quick guideliness if you wish to run this yourself.
+Some quick guideliness if you wish to run this yourself. You can run this code perfectly without any use of sensors. Or you can add in your own.
 
 ### Prerequisites
 
